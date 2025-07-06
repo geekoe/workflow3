@@ -1,9 +1,12 @@
 {
-  "name": "workflow3-mcp-server",
+  "name": "workflow3",
   "version": "1.0.0",
   "description": "MCP Server for three-stage workflow prompt injection",
   "main": "dist/index.js",
   "type": "module",
+  "bin": {
+    "workflow3": "dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",

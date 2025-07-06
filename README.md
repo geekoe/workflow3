@@ -20,10 +20,10 @@ npm install
 npm run build
 ```
 
-### 方法2：全局安装（开发完成后）
+### 方法2：全局安装
 
 ```bash
-npm install -g workflow3-mcp-server
+npm install -g workflow3
 ```
 
 ## 配置
@@ -39,18 +39,8 @@ npm install -g workflow3-mcp-server
 ```json
 {
   "workflow3": {
-    "command": "node",
-    "args": ["/path/to/workflow3/dist/index.js"]
-  }
-}
-```
-
-或者如果全局安装：
-
-```json
-{
-  "workflow3": {
-    "command": "workflow3-mcp-server"
+    "command": "npx",
+    "args": ["-y", "workflow3"]
   }
 }
 ```
@@ -67,14 +57,14 @@ npm install -g workflow3-mcp-server
 
 这将激活完整的三阶段工作流提示词。
 
-### 指定阶段
+### 阶段控制
 
-你也可以指定特定阶段：
+激活工作流后，你可以用自然语言控制阶段：
 
 ```
-@workflow3 {"stage": "analyze"}    # 仅分析阶段
-@workflow3 {"stage": "refine"}     # 仅细化阶段  
-@workflow3 {"stage": "execute"}    # 仅执行阶段
+"现在开始分析阶段"
+"进入细化方案阶段" 
+"开始执行阶段"
 ```
 
 ## 三阶段工作流说明

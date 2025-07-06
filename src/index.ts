@@ -31,13 +31,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         description: 'Activate 3-stage workflow prompt for AI assistant',
         inputSchema: {
           type: 'object',
-          properties: {
-            stage: {
-              type: 'string',
-              description: 'Optional: specify which stage to focus on (analyze, refine, execute)',
-              enum: ['analyze', 'refine', 'execute'],
-            },
-          },
+          properties: {},
           additionalProperties: false,
         },
       },
