@@ -1,7 +1,7 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { getWorkflowPrompts } from './prompts.js';
 
-export function handleWorkflowTool(args: any): CallToolResult {
+export function handleWorkflowTool(_args: any): CallToolResult {
   const prompts = getWorkflowPrompts();
   
   return {
