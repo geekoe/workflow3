@@ -1,0 +1,195 @@
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+
+export interface WorkflowPrompts {
+  fullWorkflow: string;
+  stageAnalyze: string;
+  stageRefine: string;
+  stageExecute: string;
+}
+
+const DEFAULT_PROMPTS: WorkflowPrompts = {
+  fullWorkflow: `# AI助手核心规则
+
+## 三阶段工作流
+
+### 阶段一：分析问题
+**声明格式**：\`【分析问题】\`
+
+**必须做的事**：
+- 深入理解需求本质
+- 搜索所有相关代码
+- 识别问题根因
+- 发现架构问题
+- 如果有不清楚的，请向我收集必要的信息
+- 提供1~3个解决方案（如果方案与用户想达成的目标有冲突，则不应该成为一个方案）。
+- 评估每个方案的优劣
+
+**融入的原则**：
+- 系统性思维：看到具体问题时，思考整个系统
+- 第一性原理：从功能本质出发，而不是现有代码
+- DRY原则：发现重复代码必须指出
+- 长远考虑：评估技术债务和维护成本
+
+**绝对禁止**：
+- ❌ 修改任何代码
+- ❌ 急于给出解决方案
+- ❌ 跳过搜索和理解步骤
+- ❌ 不分析就推荐方案
+
+### 阶段二：细化方案
+**声明格式**：\`【细化方案】\`
+
+**前置条件**：
+- 用户明确选择了方案（如："用方案1"、"实现这个"）
+
+**必须做的事**：
+- 列出变更（新增、修改、删除）的文件，简要描述每个文件的变化。
+
+### 阶段三：执行方案
+**声明格式**：\`【执行方案】\`
+
+**必须做的事**：
+- 严格按照选定方案实现
+- 修改后运行类型检查（npm run type-check， 要选择子目录）
+
+**绝对禁止**：
+- ❌ 提交代码（除非用户明确要求）
+- 启动开发服务器
+
+## 🚨 阶段切换规则
+
+1. **默认阶段**：收到新问题时，始终从【分析问题】开始
+2. **切换条件**：只有用户明确指示时才能切换阶段
+3. **禁止行为**：不允许在一次回复中同时进行两个阶段
+
+## ⚠️ 每次回复前的强制检查
+
+\`\`\`
+□ 我在回复开头声明了阶段吗？
+□ 我的行为符合当前阶段吗？
+□ 如果要切换阶段，用户同意了吗？
+\`\`\`
+
+---
+
+记住：每次回复必须声明当前阶段，不允许例外。`,
+
+  stageAnalyze: `【分析问题】
+
+请按照以下规则进行问题分析：
+
+**必须做的事**：
+- 深入理解需求本质
+- 搜索所有相关代码
+- 识别问题根因
+- 发现架构问题
+- 如果有不清楚的，请向我收集必要的信息
+- 提供1~3个解决方案（如果方案与用户想达成的目标有冲突，则不应该成为一个方案）
+- 评估每个方案的优劣
+
+**融入的原则**：
+- 系统性思维：看到具体问题时，思考整个系统
+- 第一性原理：从功能本质出发，而不是现有代码
+- DRY原则：发现重复代码必须指出
+- 长远考虑：评估技术债务和维护成本
+
+**绝对禁止**：
+- ❌ 修改任何代码
+- ❌ 急于给出解决方案
+- ❌ 跳过搜索和理解步骤
+- ❌ 不分析就推荐方案`,
+
+  stageRefine: `【细化方案】
+
+**前置条件**：
+- 用户明确选择了方案（如："用方案1"、"实现这个"）
+
+**必须做的事**：
+- 列出变更（新增、修改、删除）的文件，简要描述每个文件的变化
+
+请确保用户已经明确选择了方案后再进行细化。`,
+
+  stageExecute: `【执行方案】
+
+**必须做的事**：
+- 严格按照选定方案实现
+- 修改后运行类型检查（npm run type-check， 要选择子目录）
+
+**绝对禁止**：
+- ❌ 提交代码（除非用户明确要求）
+- 启动开发服务器
+
+请确保严格按照之前细化的方案进行实现。`,
+};
+
+export async function getWorkflowPrompts(): Promise<WorkflowPrompts> {
+  try {
+    // 尝试从当前目录或上级目录读取 CLAUDE.md 文件
+    const possiblePaths = [
+      join(process.cwd(), 'CLAUDE.md'),
+      join(process.cwd(), '..', 'CLAUDE.md'),
+      join(process.cwd(), '../..', 'CLAUDE.md'),
+    ];
+
+    for (const path of possiblePaths) {
+      try {
+        const content = await readFile(path, 'utf-8');
+        if (content.includes('三阶段工作流')) {
+          return {
+            fullWorkflow: content,
+            stageAnalyze: extractStageContent(content, '阶段一：分析问题'),
+            stageRefine: extractStageContent(content, '阶段二：细化方案'),
+            stageExecute: extractStageContent(content, '阶段三：执行方案'),
+          };
+        }
+      } catch {
+        // 继续尝试下一个路径
+      }
+    }
+  } catch (error) {
+    console.error('Error reading CLAUDE.md:', error);
+  }
+
+  // 如果找不到或读取失败，使用默认提示词
+  return DEFAULT_PROMPTS;
+}
+
+function extractStageContent(content: string, stageTitle: string): string {
+  const lines = content.split('\n');
+  const stageIndex = lines.findIndex(line => line.includes(stageTitle));
+  
+  if (stageIndex === -1) {
+    return `【${stageTitle}】\n\n请按照标准三阶段工作流程进行。`;
+  }
+
+  const stageLines = [];
+  let currentIndex = stageIndex;
+  
+  // 添加阶段标题
+  stageLines.push(`【${stageTitle.replace('阶段一：', '').replace('阶段二：', '').replace('阶段三：', '')}】`);
+  stageLines.push('');
+  
+  // 继续读取到下一个阶段或结束
+  while (currentIndex < lines.length) {
+    const line = lines[currentIndex];
+    
+    // 如果遇到下一个阶段标题，停止
+    if (currentIndex > stageIndex && line.includes('### 阶段')) {
+      break;
+    }
+    
+    // 如果遇到其他主要章节，停止
+    if (currentIndex > stageIndex && line.startsWith('## ') && !line.includes('阶段')) {
+      break;
+    }
+    
+    if (currentIndex > stageIndex) {
+      stageLines.push(line);
+    }
+    
+    currentIndex++;
+  }
+
+  return stageLines.join('\n').trim();
+}
