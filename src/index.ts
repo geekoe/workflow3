@@ -12,7 +12,7 @@ import { handleWorkflowTool } from './tools.js';
 
 const server = new Server(
   {
-    name: 'workflow3-mcp-server',
+    name: 'workflow3',
     version: '1.0.0',
   },
   {
