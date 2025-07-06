@@ -1,11 +1,8 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-
 export interface WorkflowPrompts {
   fullWorkflow: string;
 }
 
-const DEFAULT_PROMPTS: WorkflowPrompts = {
+const WORKFLOW_PROMPTS: WorkflowPrompts = {
   fullWorkflow: `# AI助手核心规则
 
 ## 三阶段工作流
@@ -73,32 +70,7 @@ const DEFAULT_PROMPTS: WorkflowPrompts = {
 记住：每次回复必须声明当前阶段，不允许例外。`,
 };
 
-export async function getWorkflowPrompts(): Promise<WorkflowPrompts> {
-  try {
-    // 尝试从当前目录或上级目录读取 CLAUDE.md 文件
-    const possiblePaths = [
-      join(process.cwd(), 'CLAUDE.md'),
-      join(process.cwd(), '..', 'CLAUDE.md'),
-      join(process.cwd(), '../..', 'CLAUDE.md'),
-    ];
-
-    for (const path of possiblePaths) {
-      try {
-        const content = await readFile(path, 'utf-8');
-        if (content.includes('三阶段工作流')) {
-          return {
-            fullWorkflow: content,
-          };
-        }
-      } catch {
-        // 继续尝试下一个路径
-      }
-    }
-  } catch (error) {
-    console.error('Error reading CLAUDE.md:', error);
-  }
-
-  // 如果找不到或读取失败，使用默认提示词
-  return DEFAULT_PROMPTS;
+export function getWorkflowPrompts(): WorkflowPrompts {
+  return WORKFLOW_PROMPTS;
 }
 

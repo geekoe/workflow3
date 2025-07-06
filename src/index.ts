@@ -8,7 +8,6 @@ import {
   Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 
-import { getWorkflowPrompts } from './prompts.js';
 import { handleWorkflowTool } from './tools.js';
 
 const server = new Server(
