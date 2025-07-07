@@ -1,6 +1,7 @@
 # Workflow3 MCP Server
 
-一个为Cursor等AI编辑器提供三阶段工作流提示词注入的MCP Server。
+一个为AI编程工具提供三阶段工作流提示词注入的MCP Server。
+所有支持MCP配置的工具都可以使用，比如Cursor、Claude Code、Windsurf等。
 
 ## 功能特性
 
@@ -10,22 +11,23 @@
 
 ## 安装配置
 
-如果你用的是Claude Code:
+如果你用的是Claude Code，应该通过命令行添加：
 claude mcp add workflow3 -s user -- npx -y workflow3
-这会在你的用户目录下的.claude.json中添加mcp配置。
-你也可以把上面的user改成project，影响范围就是当前工程。
+因为Claude Code程序自己管理配置文件，你手动修改可能会有冲突。
 
-如果你用的是Cursor等其他工具：
-找到你工具的MCP Server的配置，添加如下代码：
+如果你用的是Cursor，配置路径是：Cursor Settings -> Tools & Integrations -> MCP Tools
+添加如下代码(如果已经有了mcpServers，则只需要添加关于workflow3的内容)：
 
 ```json
-{
-  "workflow3": {
-    "command": "npx",
-    "args": ["-y", "workflow3"]
+{"mcpServers": {
+    "workflow3": {
+      "command": "npx",
+      "args": ["-y", "workflow3"]
+    }
   }
 }
 ```
+其他的编程工具是类似的。
 
 无需预先安装，npx会自动下载最新版本。
 
@@ -33,16 +35,18 @@ claude mcp add workflow3 -s user -- npx -y workflow3
 
 ### 基本用法
 
-在Cursor对话的第一行，写上workflow3回车即可。
+在对话的第一行：
+```
+use workflow3
+```
 也可用自然语言请求激活工作流：
 
 ```
 "请激活三阶段工作流"
 "启用workflow3"
-"使用三阶段工作流模式"
 ```
 
-Cursor会自动识别并调用workflow3工具，激活完整的三阶段工作流提示词。
+Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶段工作流提示词。
 
 ### 阶段控制
 
@@ -67,20 +71,6 @@ Cursor会自动识别并调用workflow3工具，激活完整的三阶段工作�
 - 运行必要的检查
 - 确保代码质量
 
-
-## 项目结构
-
-```
-workflow3/
-├── src/
-│   ├── index.ts      # 主入口文件
-│   ├── tools.ts      # 工具处理逻辑
-│   └── prompts.ts    # 提示词配置
-├── dist/             # 编译输出
-├── package.json
-├── tsconfig.json
-└── README.md
-```
 
 ## 许可证
 
