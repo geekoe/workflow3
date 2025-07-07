@@ -1,6 +1,6 @@
 {
   "name": "workflow3",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP Server for three-stage workflow prompt injection",
   "main": "dist/index.js",
   "type": "module",
@@ -14,7 +14,13 @@
     "dev": "tsx src/index.ts",
     "prepare": "npm run build"
   },
-  "keywords": ["mcp", "workflow", "prompt", "cursor", "ai"],
+  "keywords": [
+    "mcp",
+    "workflow",
+    "prompt",
+    "cursor",
+    "ai"
+  ],
   "author": "geekoe",
   "license": "MIT",
   "dependencies": {
