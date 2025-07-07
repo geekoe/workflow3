@@ -47,7 +47,7 @@ use workflow3
 请激活三阶段工作流
 ```
 ```
-"启用workflow3"
+启用workflow3
 ```
 
 Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶段工作流提示词。
