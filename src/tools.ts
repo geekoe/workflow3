@@ -1,14 +1,14 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { getWorkflowPrompts } from './prompts.js';
+import { getOrCreateWorkflowFile } from './utils.js';
 
 export function handleWorkflowTool(_args: any): CallToolResult {
-  const prompts = getWorkflowPrompts();
+  const workflowContent = getOrCreateWorkflowFile();
   
   return {
     content: [
       {
         type: 'text',
-        text: prompts.fullWorkflow,
+        text: workflowContent,
       },
     ],
   };

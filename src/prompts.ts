@@ -1,9 +1,23 @@
+// This file is kept for backward compatibility and fallback purposes
+// The actual workflow content is now managed through template files and user customization
+
 export interface WorkflowPrompts {
   fullWorkflow: string;
 }
 
+// This is now deprecated - use utils.ts functions instead
 const WORKFLOW_PROMPTS: WorkflowPrompts = {
-  fullWorkflow: `# AI助手核心规则
+  fullWorkflow: `# AI助手核心规则 (默认模板)
+
+这是默认的workflow3配置。正常情况下，您应该在项目根目录看到workflow3.md文件。
+
+如果您看到这条消息，可能是文件读取出现了问题。请检查：
+1. 项目根目录是否有workflow3.md文件
+2. 文件权限是否正确
+
+默认工作流将在下方显示...
+
+---
 
 ## 三阶段工作流
 
@@ -15,61 +29,19 @@ const WORKFLOW_PROMPTS: WorkflowPrompts = {
 - 搜索所有相关代码
 - 识别问题根因
 - 发现架构问题
-- 如果有不清楚的，请向我收集必要的信息
-- 提供1~3个解决方案（如果方案与用户想达成的目标有冲突，则不应该成为一个方案）。
-- 评估每个方案的优劣
-
-**融入的原则**：
-- 系统性思维：看到具体问题时，思考整个系统
-- 第一性原理：从功能本质出发，而不是现有代码
-- DRY原则：发现重复代码必须指出
-- 长远考虑：评估技术债务和维护成本
-
-**绝对禁止**：
-- ❌ 修改任何代码
-- ❌ 急于给出解决方案
-- ❌ 跳过搜索和理解步骤
-- ❌ 不分析就推荐方案
 
 ### 阶段二：细化方案
 **声明格式**：\`【细化方案】\`
 
-**前置条件**：
-- 用户明确选择了方案（如："用方案1"、"实现这个"）
-
-**必须做的事**：
-- 列出变更（新增、修改、删除）的文件，简要描述每个文件的变化。
-
 ### 阶段三：执行方案
 **声明格式**：\`【执行方案】\`
-
-**必须做的事**：
-- 严格按照选定方案实现
-- 修改后运行类型检查（npm run type-check， 要选择子目录）
-
-**绝对禁止**：
-- ❌ 提交代码（除非用户明确要求）
-- 启动开发服务器
-
-## 🚨 阶段切换规则
-
-1. **默认阶段**：收到新问题时，始终从【分析问题】开始
-2. **切换条件**：只有用户明确指示时才能切换阶段
-3. **禁止行为**：不允许在一次回复中同时进行两个阶段
-
-## ⚠️ 每次回复前的强制检查
-
-\`\`\`
-□ 我在回复开头声明了阶段吗？
-□ 我的行为符合当前阶段吗？
-□ 如果要切换阶段，用户同意了吗？
-\`\`\`
-
----
 
 记住：每次回复必须声明当前阶段，不允许例外。`,
 };
 
+/**
+ * @deprecated Use getOrCreateWorkflowFile from utils.ts instead
+ */
 export function getWorkflowPrompts(): WorkflowPrompts {
   return WORKFLOW_PROMPTS;
 }

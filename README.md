@@ -10,6 +10,12 @@
 
 ## 安装配置
 
+如果你用的是Claude Code:
+claude mcp add workflow3 -s user -- npx -y workflow3
+这会在你的用户目录下的.claude.json中添加mcp配置。
+你也可以把上面的user改成project，影响范围就是当前工程。
+
+如果你用的是Cursor等其他工具：
 找到你工具的MCP Server的配置，添加如下代码：
 
 ```json
