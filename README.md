@@ -11,11 +11,10 @@
 
 ## 安装配置
 
-如果你用的是Claude Code，应该通过命令行添加：
+如果你用的是Claude Code，通过命令行添加：
 ```
 claude mcp add workflow3 -s user -- npx -y workflow3
 ```
-因为Claude Code程序自己管理配置文件，你手动修改可能会有冲突。
 
 如果你用的是Cursor，配置路径是：Cursor Settings -> Tools & Integrations -> MCP Tools
 添加如下代码(如果已经有了mcpServers，则只需要添加关于workflow3的内容)：
@@ -29,6 +28,25 @@ claude mcp add workflow3 -s user -- npx -y workflow3
   }
 }
 ```
+
+如果你访问npm有困难，可以使用镜像，比如用淘宝的npm镜像：
+
+```json
+{
+  "mcpServers": {
+    "workflow3": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "--registry",
+        "https://registry.npmmirror.com",
+        "workflow3"
+      ]
+    }
+  }
+}
+```
+
 其他的编程工具是类似的。
 
 无需预先安装，npx会自动下载最新版本。
@@ -52,9 +70,15 @@ use workflow3
 
 Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶段工作流提示词。
 
+使用后在项目根目录会生成一个workflow3.md，你可以直接改，改了之后下次对话生效。也可以删除，下次对话重新下载。
+
 ### 阶段控制
 
 激活工作流后，默认阶段是分析问题，你也可以指定阶段。
+
+## 提示词
+
+在本仓库的 src/templates/workflow3.md，有完整的提示词，随意使用。
 
 
 ## 三阶段工作流说明
@@ -63,9 +87,9 @@ Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶�
 - 深入理解需求本质
 - 搜索所有相关代码
 - 识别问题根因
-- 提供1~3个解决方案
+- 向我提问
 
-### 阶段二：细化方案 【细化方案】
+### 阶段二：制定方案 【制定方案】
 - 列出变更文件清单
 - 描述每个文件的具体变化
 - 确保方案可执行
