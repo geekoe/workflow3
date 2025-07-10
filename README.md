@@ -12,7 +12,9 @@
 ## 安装配置
 
 如果你用的是Claude Code，应该通过命令行添加：
+```
 claude mcp add workflow3 -s user -- npx -y workflow3
+```
 因为Claude Code程序自己管理配置文件，你手动修改可能会有冲突。
 
 如果你用的是Cursor，配置路径是：Cursor Settings -> Tools & Integrations -> MCP Tools
@@ -42,8 +44,10 @@ use workflow3
 也可用自然语言请求激活工作流：
 
 ```
-"请激活三阶段工作流"
-"启用workflow3"
+请激活三阶段工作流
+```
+```
+启用workflow3
 ```
 
 Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶段工作流提示词。
