@@ -3,6 +3,11 @@
 一个为AI编程工具提供三阶段工作流提示词注入的MCP Server。
 所有支持MCP配置的工具都可以使用，比如Cursor、Claude Code、Windsurf等。
 
+## 提示词
+
+完整提示词请见：[src/templates/workflow3.md](./src/templates/workflow3.md)，可随意使用。
+如果你添加到cursor rule或者CLAUDE.md中，就不需要安装mcp了。
+
 ## 功能特性
 
 - 🚀 一键激活三阶段工作流提示词
@@ -75,10 +80,6 @@ Cursor等编程工具会自动识别并调用workflow3，激活完整的三阶�
 ### 阶段控制
 
 激活工作流后，默认阶段是分析问题，你也可以指定阶段。
-
-## 提示词
-
-在本仓库的 src/templates/workflow3.md，有完整的提示词，随意使用。
 
 
 ## 三阶段工作流说明
