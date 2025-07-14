@@ -12,7 +12,8 @@
     "copy-templates": "cp -r src/templates dist/",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "release": "npm version patch && npm publish && git push"
   },
   "keywords": [
     "mcp",
