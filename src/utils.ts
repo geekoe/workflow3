@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -155,17 +156,19 @@ export function readTemplateContent(): string {
 }
 
 /**
- * 获取或创建用户项目中的workflow3.md文件内容
+ * 获取或创建用户主目录中的.workflow3.md文件内容
  */
 export function getOrCreateWorkflowFile(): string {
   try {
-    // 1. 使用新的MCP工作目录获取方法
-    const projectRoot = getMCPWorkingDirectory();
-    const workflowFilePath = path.join(projectRoot, 'workflow3.md');
+    // 1. 使用用户主目录路径
+    const workflowFilePath = path.join(os.homedir(), '.workflow3.md');
     
     console.error(`🔍 [workflow3] 目标文件路径: ${workflowFilePath}`);
     
-    // 2. 检查文件是否存在
+    // 2. 处理旧的项目根目录文件
+    handleLegacyWorkflowFile();
+    
+    // 3. 检查用户主目录文件是否存在
     if (fs.existsSync(workflowFilePath)) {
       // 文件存在，读取用户自定义内容
       console.error(`✅ [workflow3] 读取现有文件: ${workflowFilePath}`);
@@ -175,7 +178,7 @@ export function getOrCreateWorkflowFile(): string {
       console.error(`📝 [workflow3] 创建新文件: ${workflowFilePath}`);
       const defaultContent = readTemplateContent();
       
-      // 写入默认内容到用户项目
+      // 写入默认内容到用户主目录
       fs.writeFileSync(workflowFilePath, defaultContent, 'utf-8');
       console.error(`✅ [workflow3] 文件创建成功: ${workflowFilePath}`);
       
@@ -186,5 +189,41 @@ export function getOrCreateWorkflowFile(): string {
     // 发生错误时，返回模板内容作为fallback
     console.error('🔄 [workflow3] 使用模板内容作为fallback');
     return readTemplateContent();
+  }
+}
+
+/**
+ * 处理项目根目录中的旧workflow3.md文件
+ */
+function handleLegacyWorkflowFile(): void {
+  try {
+    const projectRoot = getMCPWorkingDirectory();
+    const legacyFilePath = path.join(projectRoot, 'workflow3.md');
+    
+    if (fs.existsSync(legacyFilePath)) {
+      const content = fs.readFileSync(legacyFilePath, 'utf-8');
+      
+      // 检查是否已经是失效提示文件
+      if (content.includes('本文件已失效')) {
+        return;
+      }
+      
+      // 添加失效说明
+      const deprecationNotice = `# 注意：本文件已失效
+
+本文件已失效，有效的文件路径已更改到 ~/.workflow3.md
+
+请删除此文件，并在用户主目录的 ~/.workflow3.md 文件中进行配置。
+
+---
+
+`;
+      
+      const updatedContent = deprecationNotice + content;
+      fs.writeFileSync(legacyFilePath, updatedContent, 'utf-8');
+      console.error(`📝 [workflow3] 已在旧文件添加失效说明: ${legacyFilePath}`);
+    }
+  } catch (error) {
+    console.error(`⚠️ [workflow3] 处理旧文件时出错: ${error}`);
   }
 }
