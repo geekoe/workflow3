@@ -1,6 +1,6 @@
 {
   "name": "workflow3",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "MCP Server for three-stage workflow prompt injection",
   "main": "dist/index.js",
   "type": "module",
